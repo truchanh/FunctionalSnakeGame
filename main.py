@@ -99,72 +99,74 @@ clk = pg.time.Clock()  ##create a Clock object to keep track of time in game
 
 snake_pos = [(3,10),(4,10),(5,10)]  ##each tuple format: (column,row)
 snake_direction = NOT_MOVE
+
 SNAKE_MOVE = pg.event.custom_type()
 pg.time.set_timer(SNAKE_MOVE,65)  ##triggers after every n millisec.
 
 fruit_rect = randomise_fruit_position()  ##initial position of the fruit when game start
 
-#### MAIN GAME LOOP ####
-add_snake_segment = False
-done = False
-while not done:
-    clk.tick(FPS)  ##limits the framerate
-    for e in pg.event.get():
-        if e.type in (QUIT,WINDOWCLOSE):
-            done = True
-        elif e.type == KEYDOWN and not e.type == KEYUP:
-            on_keydown(e.key)
-        elif e.type == SNAKE_MOVE:
-            if snake_direction != NOT_MOVE:
-                if not add_snake_segment:
-                    pos_cpy = snake_pos[1:]  ##take everything except the tail
-                else:
-                    pos_cpy = snake_pos[:]
-                    add_snake_segment = False
-                new_head_col = pos_cpy[-1][0]+snake_direction[0]
-                new_head_row = pos_cpy[-1][1]+snake_direction[1]
-                new_head_direction = [new_head_col, new_head_row]
-                pos_cpy.append(new_head_direction)
-                snake_pos = pos_cpy.copy()  ##applying changes to the real snake body position
-    win.fill('black')  ##clearing the screen
-    #### DRAW EVERYTHING BELOW ####
-    draw_fruit()
-    draw_snake()
-    draw_grid()
-    #### DETECTING COLLISIONS ####
-
-    ##datas need for collisions detection
-    snake_head_col,snake_head_row = snake_pos[-1]
-    fruit_col,fruit_row = fruit_rect.left//CELLSIZE,fruit_rect.top//CELLSIZE
-
-    ##snake eats fruit
-    if (snake_head_col,snake_head_row) == (fruit_col,fruit_row):
-        fruit_rect = randomise_fruit_position()
-        if (fruit_col,fruit_row) in snake_pos:
-            continue
-        add_snake_segment = True
-    
-    ##our snake hits either one of the four edges of the screen(left,right,top,bottom)
-    if not snake_head_col in range(0,CELLCOL) or\
-       not snake_head_row in range(0,CELLROW):
-        print('collide with wall')
-        done = True
-
-    ##our snake hits itself
-    for body_col,body_row in snake_pos[:-1]:
-        if (snake_head_col,snake_head_row) == (body_col,body_row):
-            print('oops:<')
-            done = True
-    
-    ##update player' score
-    score = len(snake_pos)-3
-
-    ##max snake' length reached
-    if len(snake_pos)>=CELLCOL*CELLROW:
-        done = True
-        break
-    
-    display_score(str(score),'white',(0,0))
-    pg.display.flip()
-pg.quit()
-print('you\'re score is',score)
+if __name__ == '__main__':
+	#### MAIN GAME LOOP ####
+	add_snake_segment = False
+	done = False
+	while not done:
+	    clk.tick(FPS)  ##limits the framerate
+	    for e in pg.event.get():
+	        if e.type in (QUIT,WINDOWCLOSE):
+	            done = True
+	        elif e.type == KEYDOWN and not e.type == KEYUP:
+	            on_keydown(e.key)
+	        elif e.type == SNAKE_MOVE:
+	            if snake_direction != NOT_MOVE:
+	                if not add_snake_segment:
+	                    pos_cpy = snake_pos[1:]  ##take everything except the tail
+	                else:
+	                    pos_cpy = snake_pos[:]
+	                    add_snake_segment = False
+	                new_head_col = pos_cpy[-1][0]+snake_direction[0]
+	                new_head_row = pos_cpy[-1][1]+snake_direction[1]
+	                new_head_direction = [new_head_col, new_head_row]
+	                pos_cpy.append(new_head_direction)
+	                snake_pos = pos_cpy.copy()  ##applying changes to the real snake body position
+	    win.fill('black')  ##clearing the screen
+	    #### DRAW EVERYTHING BELOW ####
+	    draw_fruit()
+	    draw_snake()
+	    draw_grid()
+	    #### DETECTING COLLISIONS ####
+	
+	    ##datas need for collisions detection
+	    snake_head_col,snake_head_row = snake_pos[-1]
+	    fruit_col,fruit_row = fruit_rect.left//CELLSIZE,fruit_rect.top//CELLSIZE
+	
+	    ##snake eats fruit
+	    if (snake_head_col,snake_head_row) == (fruit_col,fruit_row):
+	        fruit_rect = randomise_fruit_position()
+	        if (fruit_col,fruit_row) in snake_pos:
+	            continue
+	        add_snake_segment = True
+	    
+	    ##our snake hits either one of the four edges of the screen(left,right,top,bottom)
+	    if not snake_head_col in range(0,CELLCOL) or\
+	       not snake_head_row in range(0,CELLROW):
+	        print('collide with wall')
+	        done = True
+	
+	    ##our snake hits itself
+	    for body_col,body_row in snake_pos[:-1]:
+	        if (snake_head_col,snake_head_row) == (body_col,body_row):
+	            print('oops:<')
+	            done = True
+	    
+	    ##update player' score
+	    score = len(snake_pos)-3
+	
+	    ##max snake' length reached
+	    if len(snake_pos)>=CELLCOL*CELLROW:
+	        done = True
+	        break
+	    
+	    display_score(str(score),'white',(0,0))
+	    pg.display.flip()
+	pg.quit()
+	print('you\'re score is',score)
