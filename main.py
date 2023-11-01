@@ -146,13 +146,13 @@ if __name__ == '__main__':
 	            continue
 	        add_snake_segment = True
 	    
-	    ##our snake hits either one of the four edges of the screen(left,right,top,bottom)
+	    ##our snake' head hits either one of the four edges of the screen(left,right,top,bottom)
 	    if not snake_head_col in range(0,CELLCOL) or\
 	       not snake_head_row in range(0,CELLROW):
 	        print('collide with wall')
 	        done = True
 	
-	    ##our snake hits itself
+	    ##our snake' head hits its body
 	    for body_col,body_row in snake_pos[:-1]:
 	        if (snake_head_col,snake_head_row) == (body_col,body_row):
 	            print('oops:<')
